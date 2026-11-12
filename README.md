@@ -12,27 +12,22 @@
 - 通过 procd 后台服务按约 10 秒间隔同步当天规则。
 - 保留原生控制器、页面和 appfilter 配置备份，提供检查与卸载恢复脚本。
 
-## 安装
+## 文档
 
-将 [Linux 安装包](releases/v2.1.1/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz) 上传到 OpenWrt 的 `/tmp/`，执行：
+- [完整中文安装与使用说明](INSTALL-CN.md)
+- [V2.1.1 源码目录](src/v2.1.1/)
+
+## 从源码目录安装
+
+将 `src/v2.1.1/` 中的全部文件上传到 OpenWrt 的同一个目录（例如 `/tmp/TGEEK-OAF-Time-Sync-v2.1.1`），然后执行：
 
 ```sh
-cd /tmp
-tar -xzf TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz
-cd TGEEK-OAF-Time-Sync-v2.1.1
+cd /tmp/TGEEK-OAF-Time-Sync-v2.1.1
 sh install.sh
 sh verify.sh
 ```
 
 安装前请确认设备已安装原生 OAF，且存在兼容的 Lua LuCI 控制器、时间页面及 appfilter ubus 接口。建议在维护窗口安装。
-
-## 文档与源码
-
-- [完整中文安装使用说明](INSTALL-CN.md)
-- [Word 安装使用说明](docs/TGEEK-OAF-Time-Sync-V2.1.1-安装使用说明.docx)
-- [V2.1.1 源码目录](src/v2.1.1/)
-- [SHA256 校验清单](RELEASE-SHA256SUMS)
-- [ZIP 安装包](releases/v2.1.1/TGEEK-OAF-Time-Sync-v2.1.1.zip)
 
 ## 卸载与回滚
 
@@ -46,4 +41,4 @@ sh /root/oaf-time-sync-backup/uninstall.sh
 
 ## 验证状态
 
-已对发布包内源文件执行 SHA256 校验，并检查安装包归档结构。尚未在所有 OAF 固件分支上验证；`verify.sh` 只能检查安装状态，不能替代真实终端的限时访问测试。
+源文件来自 TGEEK OAF Time Sync V2.1.1 安装包。`verify.sh` 只能检查安装状态，不能替代真实终端的限时访问测试。当天没有匹配时间段时使用“前一天 + 全天占位时间段”的机制依赖具体 OAF 实现，必须在目标固件上验证。
