@@ -1,0 +1,54 @@
+name: Publish V2.1.1 release assets
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publish-v2.1.1.yml"
+      - "release-assets/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz.b64"
+      - "INSTALL-CN.md"
+      - "RELEASE-NOTES.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild release files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          base64 --decode release-assets/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz.b64 > dist/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz
+          tar -tzf dist/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz >/dev/null
+          git archive --format=zip --prefix=TGEEK-OAF-Time-Sync-v2.1.1/ HEAD -o dist/TGEEK-OAF-Time-Sync-v2.1.1-Full.zip
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+          pandoc INSTALL-CN.md --from=gfm --to=docx -o dist/TGEEK-OAF-Time-Sync-V2.1.1-安装使用说明.docx
+          (
+            cd dist
+            sha256sum *.tar.gz *.zip *.docx > SHA256SUMS.txt
+          )
+
+      - name: Upload assets to existing v2.1.1 release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.1.1
+          name: TGEEK OAF Time Sync V2.1.1
+          body_path: RELEASE-NOTES.md
+          files: |
+            dist/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz
+            dist/TGEEK-OAF-Time-Sync-v2.1.1-Full.zip
+            dist/TGEEK-OAF-Time-Sync-V2.1.1-安装使用说明.docx
+            dist/SHA256SUMS.txt
+          overwrite_files: true
+          fail_on_unmatched_files: true
