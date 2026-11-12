@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - ".github/workflows/publish-v2.1.1.yml"
-      - "release-assets/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz.b64"
+      - "src/v2.1.1/**"
       - "INSTALL-CN.md"
       - "RELEASE-NOTES.md"
   workflow_dispatch:
@@ -23,12 +23,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Rebuild release files
+      - name: Build and verify release files
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p dist
-          base64 --decode release-assets/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz.b64 > dist/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz
+          mkdir -p dist/TGEEK-OAF-Time-Sync-v2.1.1
+          cp -a src/v2.1.1/. dist/TGEEK-OAF-Time-Sync-v2.1.1/
+          chmod 755 dist/TGEEK-OAF-Time-Sync-v2.1.1/*.sh dist/TGEEK-OAF-Time-Sync-v2.1.1/runner.lua
+          tar -czf dist/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz -C dist TGEEK-OAF-Time-Sync-v2.1.1
           tar -tzf dist/TGEEK-OAF-Time-Sync-v2.1.1-Linux.tar.gz >/dev/null
           git archive --format=zip --prefix=TGEEK-OAF-Time-Sync-v2.1.1/ HEAD -o dist/TGEEK-OAF-Time-Sync-v2.1.1-Full.zip
           sudo apt-get update
