@@ -35,7 +35,7 @@ jobs:
           git archive --format=zip --prefix=TGEEK-OAF-Time-Sync-v2.1.1/ HEAD -o dist/TGEEK-OAF-Time-Sync-v2.1.1-Full.zip
           sudo apt-get update
           sudo apt-get install -y pandoc
-          pandoc INSTALL-CN.md --from=gfm --to=docx -o dist/TGEEK-OAF-Time-Sync-V2.1.1-安装使用说明.docx
+          pandoc INSTALL-CN.md --from=gfm --to=docx -o dist/TGEEK-OAF-Time-Sync-V2.1.1-User-Manual.docx
           (
             cd dist
             sha256sum *.tar.gz *.zip *.docx > SHA256SUMS.txt
